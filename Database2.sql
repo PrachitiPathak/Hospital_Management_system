@@ -45,6 +45,33 @@ LOCK TABLES `appointment` WRITE;
 INSERT INTO `appointment` VALUES (101,1,1,'2025-06-20 09:00:00','Completed'),(102,2,2,'2025-06-20 10:00:00','Completed'),(103,3,3,'2025-06-21 11:00:00','Completed'),(104,4,4,'2025-06-21 12:30:00','Completed'),(105,5,5,'2025-06-22 14:00:00','Completed'),(106,6,6,'2025-06-22 15:30:00','Completed'),(107,7,7,'2025-06-23 10:15:00','Completed'),(108,8,8,'2025-06-23 16:00:00','Completed'),(109,9,9,'2025-06-24 09:45:00','Completed'),(110,10,10,'2025-06-24 11:30:00','Completed'),(111,11,11,'2025-06-25 10:00:00','Completed'),(112,12,12,'2025-06-25 11:30:00','Completed'),(113,13,13,'2025-06-26 13:00:00','Completed'),(114,14,14,'2025-06-26 14:45:00','Completed'),(115,15,15,'2025-06-27 15:15:00','Completed'),(116,16,16,'2025-06-27 16:00:00','Completed'),(117,17,17,'2025-06-28 09:00:00','Completed'),(118,18,18,'2025-06-28 10:30:00','Completed'),(119,19,19,'2025-06-29 11:00:00','Scheduled'),(120,20,20,'2025-06-29 13:00:00','Cancelled'),(121,23,1,'2025-12-14 12:00:00','Scheduled'),(122,23,23,'2025-07-02 12:00:00','Scheduled');
 /*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `appointment_BEFORE_INSERT` BEFORE INSERT ON `appointment` FOR EACH ROW BEGIN
+    DECLARE appointment_exists INT;
+ 
+    SELECT COUNT(*) INTO appointment_exists
+    FROM appointment
+    WHERE Doctor_ID = NEW.Doctor_ID
+      AND Date_time = NEW.Date_time;
+ 
+    IF appointment_exists > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'This doctor already has an appointment scheduled at that time.';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `billing`
@@ -208,6 +235,204 @@ LOCK TABLES `patient_prescription_history` WRITE;
 INSERT INTO `patient_prescription_history` VALUES (101,'Hypertension','Amlodipine 5mg daily'),(102,'Migraine','Sumatriptan 50mg PRN'),(103,'Lower back pain','Ibuprofen 400mg BID'),(104,'Fever & viral infection','Paracetamol + Rest'),(105,'Eczema','Topical Hydrocortisone'),(106,'Otitis Media','Ciprofloxacin ear drops'),(107,'Depression','Sertraline 50mg OD'),(108,'UTI','Nitrofurantoin 100mg BID'),(109,'Gastritis','Pantoprazole 40mg before food'),(110,'Menstrual cramps','Mefenamic acid 500mg'),(111,'Hypertension','Lifestyle mod. + ACE inhibitor'),(112,'Migraine','Avoid triggers + pain relief'),(113,'Arthritis','Diclofenac gel + hot compress'),(114,'Common Cold','Antihistamine + warm fluids'),(115,'Acne Vulgaris','Benzoyl peroxide 2.5% cream'),(116,'Earwax buildup','Olive oil ear drops'),(117,'Anxiety Disorder','Cognitive therapy sessions'),(118,'Kidney stone','Tamsulosin + hydration'),(101,'Hypertension','Amlodipine 5mg daily'),(102,'Migraine','Sumatriptan 50mg PRN'),(103,'Lower back pain','Ibuprofen 400mg BID'),(104,'Fever & viral infection','Paracetamol + Rest'),(105,'Eczema','Topical Hydrocortisone'),(106,'Otitis Media','Ciprofloxacin ear drops'),(107,'Depression','Sertraline 50mg OD'),(108,'UTI','Nitrofurantoin 100mg BID'),(109,'Gastritis','Pantoprazole 40mg before food'),(110,'Menstrual cramps','Mefenamic acid 500mg'),(111,'Hypertension','Lifestyle mod. + ACE inhibitor'),(112,'Migraine','Avoid triggers + pain relief'),(113,'Arthritis','Diclofenac gel + hot compress'),(114,'Common Cold','Antihistamine + warm fluids'),(115,'Acne Vulgaris','Benzoyl peroxide 2.5% cream'),(116,'Earwax buildup','Olive oil ear drops'),(117,'Anxiety Disorder','Cognitive therapy sessions'),(118,'Kidney stone','Tamsulosin + hydration'),(121,'backdkfdkfjd','kdfjdlfjldf');
 /*!40000 ALTER TABLE `patient_prescription_history` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'hospital'
+--
+
+--
+-- Dumping routines for database 'hospital'
+--
+/*!50003 DROP FUNCTION IF EXISTS `GetDepartmentBySymptom` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetDepartmentBySymptom`(sympt VARCHAR(100)) RETURNS varchar(100) CHARSET utf8mb4
+    DETERMINISTIC
+BEGIN
+    DECLARE mdeptname VARCHAR(100); 
+    SELECT Dept_name INTO mdeptname
+    FROM Departments
+    WHERE Dept_Symptoms = sympt
+    LIMIT 1; 
+    RETURN mdeptname;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Calculate_Discount` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Calculate_Discount`(IN p_patient_id INT, OUT Discount INT)
+BEGIN
+    DECLARE last_visit DATE;
+ 
+    -- Get last arrival date for the same patient (excluding today)
+    SELECT MAX(Arrival_Date) INTO last_visit
+    FROM Patient_arrival_Info
+    WHERE Pat_ID = p_patient_id;
+ 
+    IF last_visit IS NULL OR DATEDIFF(CURDATE(), last_visit) > 30 THEN
+        SET Discount = 0;
+    ELSE
+        SET Discount = 20;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Generate_Hospital_Bill` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Generate_Hospital_Bill`(IN p_appointment_id INT)
+BEGIN
+    DECLARE v_doctor_id INT;
+    DECLARE v_doctor_dept_name VARCHAR(10);
+    DECLARE v_patient_id INT;
+    DECLARE v_dept_fee INT;
+    DECLARE v_discount INT;
+    DECLARE v_amount INT;
+    DECLARE v_status ENUM('Scheduled', 'Completed', 'Cancelled');
+
+    -- Step 1: Update all appointment statuses
+    CALL UpdateAppointmentStatuses();
+
+    -- Step 2: Check appointment status
+    SELECT Status, Doctor_ID, Patient_ID INTO v_status, v_doctor_id, v_patient_id
+    FROM Appointment
+    WHERE Appointment_ID = p_appointment_id;
+
+    -- Step 3: Fetch department fee based on Doctor_ID
+    select Dept_id into v_doctor_dept_name
+    from Doctor
+    where Doct_ID = v_doctor_id ;
+    select Dept_fee into v_dept_fee
+    from Departments
+    where Dept_ID = v_doctor_dept_name;
+
+    -- Step 4: Calculate discount
+    SET @discount = 0;
+	CALL Calculate_Discount(v_patient_id, @discount);
+    SET v_discount = @discount;
+
+
+    -- Step 5: Calculate final amount
+    SET v_amount = v_dept_fee - (v_dept_fee * (v_discount / 100));
+
+    -- Step 6: Insert bill into Billing table
+    INSERT INTO Billing (Bill_date_time, Appoint_ID)
+    VALUES (NOW(), p_appointment_id);
+
+    -- Step 7: Display the bill details
+    SELECT 
+        p_appointment_id AS Appointment_ID,
+        NOW() AS Bill_Date,
+        v_dept_fee AS Dept_Fee,
+        v_discount AS Perct_Discount,
+        v_amount AS Amount_To_Pay;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `Increase_Dept_Fee_Annually` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Increase_Dept_Fee_Annually`()
+BEGIN
+    UPDATE Departments
+    SET Dept_fee = Dept_fee * 1.05;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `UpdateAppointmentStatuses` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateAppointmentStatuses`()
+BEGIN
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE appoint_id INT;
+  DECLARE appoint_datetime DATETIME;
+
+  -- Declare cursor to fetch appointment IDs and their scheduled datetime
+  DECLARE appt_cursor CURSOR FOR
+    SELECT Appointment_ID, Date_time
+    FROM Appointment;
+
+  -- Handler to exit loop when done
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  OPEN appt_cursor;
+
+  read_loop: LOOP
+    FETCH appt_cursor INTO appoint_id, appoint_datetime;
+
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+
+    -- Compare appointment time with current system time
+    IF appoint_datetime < NOW() THEN
+      UPDATE Appointment
+      SET Status = 'Completed'
+      WHERE Appointment_ID = appoint_id;
+    ELSE
+      UPDATE Appointment
+      SET Status = 'Scheduled'
+      WHERE Appointment_ID = appoint_id;
+    END IF;
+
+  END LOOP;
+
+  CLOSE appt_cursor;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -218,4 +443,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-02 13:47:19
+-- Dump completed on 2025-07-02 15:17:54
